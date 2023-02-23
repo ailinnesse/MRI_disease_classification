@@ -10,15 +10,15 @@ We will use accuracy to mesure model perfomances and have traning and validation
 
 ## Table of Contents
 
-1. [EDA](https://github.com/MakenaJones/mental_health_searches/blob/main/code/01_Data_preparation.ipynb) : Printing the samples of the images and looking at the classes distributions.
+1. [EDA](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/01_EDA.ipynb) : Printing the samples of the images and looking at the classes distributions.
 
-2. [Alzheimer](https://github.com/MakenaJones/mental_health_searches/blob/main/code/02_EDA.ipynb) : Fit the models for Alzheimer's disease severity classification, including pretrined models EfficientNetV2S, Xception and ResNet50
+2. [Alzheimer](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/02_Alzheimer.ipynb) : Fit the models for Alzheimer's disease severity classification, including pretrined models EfficientNetV2S, Xception and ResNet50
 
-3. [Brain Tumor](https://github.com/MakenaJones/mental_health_searches/blob/main/code/03_Autocorrelation_Trend_Detection.ipynb) : Fit the models for Brain Tumor type classification, including pretrined models EfficientNetV2S, Xception and ResNet50
+3. [Brain Tumor](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/03_Brain_tumor.ipynb) : Fit the models for Brain Tumor type classification, including pretrined models EfficientNetV2S, Xception and ResNet50
 
-4. [Augmentation](https://github.com/MakenaJones/mental_health_searches/blob/main/code/04_Start_COVID_ForecasterAutoreg_SARIMAX.ipynb) : Augment the images using ImageDataGenerator and Albumentations and fit the models.
+4. [Augmentation](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/04_Augmentation.ipynb) : Augment the images using ImageDataGenerator and Albumentations and fit the models.
 
-5. [Classifying both disease together](https://github.com/MakenaJones/mental_health_searches/blob/main/code/05_Middle_COVID_ForecasterAutoreg_SARIMAX.ipynb) : 
+5. [Classifying both disease together](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/05_Classifying_both_together.ipynb) : 
 ---
 ## Data
 
