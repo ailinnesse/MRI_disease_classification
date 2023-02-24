@@ -18,7 +18,7 @@ We will use accuracy to mesure model perfomances and have traning and validation
 
 4. [Augmentation](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/04_Augmentation.ipynb) : Augment the images using ImageDataGenerator and Albumentations and fit the models.
 
-5. [Classifying both disease together](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/05_Classifying_both_together.ipynb) : 
+5. [Classifying both disease together](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/05_Classifying_both_together.ipynb) : Run four models. Two Binary: Disease-No Disease and Alzheimer's-Brain Tumor. Two Categorical: Severity of Alzhiemer's and Brain tumor type. 
 ---
 ## Data
 
@@ -38,10 +38,12 @@ The data was collected from two kaggle datasets:
 ### Alzheimer's disease
 The classes for Alzheimer's disease are imbalansed with majority images in Non Alzheimer's class and just a few in Moderate. 
 My baseline for this model is 50%
+![al_avaliable](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/Alzheimer's%20disease%20severity%20level%20classes.jpeg) 
 
 ### Brain Tumor
 The classes for Brain tumor are balansed between different types, but no tumor has about half of the number of images.
 My baseline for this model is 30%
+![bt_avaliable](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/Brain%20Tumor%20classes.jpeg) 
 
 ---
 
@@ -97,4 +99,4 @@ To answer the second part of our problem statement, regarding whether models see
 ---
 ## Software Requirements
 
-For this project, we imported pandas, listdir, matplotlib, numpy, seaborn, statsmodels, greykite (note: have to create seperate environment - use this [guide](https://linkedin.github.io/greykite/installation)), datetime, warnings, collections, sklearn, plotly, itertools, tqdm, prophet, math, multiprocessing and skforecast.
+For this project, we imported pandas, os, matplotlib, cv2, albumentations, sklearn, numpy, mlxtend, tensorflow for streamlit app: streamlit, h5py, gdown 
