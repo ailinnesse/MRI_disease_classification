@@ -1,15 +1,17 @@
-from tensorflow.math import confusion_matrix
 import matplotlib.pyplot as plt
 from mlxtend.plotting import plot_confusion_matrix
 import numpy as np
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.utils import class_weight
 from os import listdir
+from tensorflow.math import confusion_matrix
 from tensorflow.image import grayscale_to_rgb
 from tensorflow import convert_to_tensor
 from tensorflow.io import read_file, decode_jpeg
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical, load_img, img_to_array
 from tensorflow.image import resize
+from tensorflow import expand_dims
 
 # Set image size
 image_size = 240
@@ -74,12 +76,14 @@ def acc_conf_matrix(model, val_data=None, X=None, y=None, class_names_list = Non
     
     
     
-def read_grey_images_to_rgb(path, train_test = True):
+
+def read_gray_images_to_rgb(path, train_test = True, weights = False):
     '''
-    Read Greyscale images from a directory and convert them to RGB
+    Read Grayscale images from a directory and convert them to RGB
     Input: 
     path - str, the path to the images
     train_test - bool, Default True. Controls the spliting of the data, if False - no split
+    weights - bool, Default False. Controls the calculation and return of the weights, if False - no weight are calculated
     Return: X_train, X_val, y_train, y_val - four arrays ready for TensorFlow models (if train_test = True) or X_test, y_test - two arrays ready for predicting
     '''
     X = []
@@ -90,26 +94,32 @@ def read_grey_images_to_rgb(path, train_test = True):
         # Change each image and append to X and y
         for image in listdir(f'{path}/{label}'):
             if '.jpg' in image:
-                img = read_file(f'{path}/{label}/{image}')  
-                img = decode_jpeg(img, channels=1)
-                img = resize(img,[image_size, image_size])
-                img = convert_to_tensor(img[:,:,:1])
+                img = load_img(f'{path}/{label}/{image}', target_size=(image_size, image_size), color_mode='grayscale')
+                img = expand_dims(img, -1)
                 # Make image RGB for pre-trained models
-                img = grayscale_to_rgb(img, name=None)
-                X.append(img)
+                img = grayscale_to_rgb(img)
+                img_arr = img_to_array(img) 
+                X.append(img_arr)
                 y.append(num_label)
     # For training the model
     if train_test:
         X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=18, stratify=y) 
         
+        # Get class weights for model
+        if weights:
+            class_weights = class_weight.compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
+            weights_dict = {i:w for i,w in enumerate(class_weights)}
+        
         # Change for TensorFlow models
         X_train = np.array(X_train, dtype='float32')
         X_val = np.array(X_val, dtype='float32')
-
+        
         y_train = to_categorical(y_train, num_classes=4, dtype='float32')
         y_val = to_categorical(y_val, num_classes=4, dtype='float32')
-
-        return X_train, X_val, y_train, y_val
+        if weights: # return weights dictionary, if weights needed
+            return X_train, X_val, y_train, y_val, weights_dict
+        else:
+            return X_train, X_val, y_train, y_val
     # For testing
     else:
         X_test = np.array(X, dtype='float32')
