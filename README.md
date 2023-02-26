@@ -19,12 +19,17 @@ We will use accuracy to mesure model perfomances and have traning and validation
 4. [Augmentation](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/04_Augmentation.ipynb) : Augment the images using ImageDataGenerator and Albumentations and fit the models.
 
 5. [Classifying both disease together](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/05_Classifying_both_together.ipynb) : Run four models. Two Binary: Disease-No Disease and Alzheimer's-Brain Tumor. Two Categorical: Severity of Alzhiemer's and Brain tumor type. 
+
+6. [functions](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/functions.py) : Functions used across severall notebooks. 
+
+7. [Streamlit_MRI_classification](https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/Streamlit_MRI_classification.py) : Streamlit app code for classifying single image input.
+
 ---
 ## Data
 
 The data was collected from two kaggle datasets:
-    * [Alzheimer's disease](https://www.kaggle.com/datasets/tourist55/alzheimers-dataset-4-class-of-images)
-    * [Brain Tumor](https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri)
+     [Alzheimer's disease](https://www.kaggle.com/datasets/tourist55/alzheimers-dataset-4-class-of-images)  and
+     [Brain Tumor](https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri)
 
 ### Datasets
 |Dataset|Description|

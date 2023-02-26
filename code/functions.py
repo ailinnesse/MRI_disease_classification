@@ -7,10 +7,7 @@ from sklearn.utils import class_weight
 from os import listdir
 from tensorflow.math import confusion_matrix
 from tensorflow.image import grayscale_to_rgb
-from tensorflow import convert_to_tensor
-from tensorflow.io import read_file, decode_jpeg
 from tensorflow.keras.utils import to_categorical, load_img, img_to_array
-from tensorflow.image import resize
 from tensorflow import expand_dims
 
 # Set image size
@@ -48,11 +45,22 @@ def evaluation_plots(history, name_for_title):
     
 def acc_conf_matrix(model, val_data=None, X=None, y=None, class_names_list = None, binary = False):
     '''
+    Evaluate the model
+    Input:
+    model - TensorFlow model
+    val_data - validation portion of data from image_dataset_from_directory, default - None
+    X - array, images converted for TensorFlow models, default - None
+    y - array, labels converted for TensorFlow model, default - None
+    class_names_list - list, names of the classes, for data split to X and y, default - None
+    binary - bool, controls the handling of y and predictions, default - False
+    Output:
+    Prints Accuracy of the model on a given set of data
+    Plots Confusion matrics for a given set of data
     '''
     # Generate Confusion Matrix
     predictions = np.array([])
     labels =  np.array([])
-    if val_data == None:
+    if val_data == None: # When data is in X and y separately
         if binary:
             predictions = (model.predict(X, verbose = False) > 0.5).astype("int32")
             labels = y  
@@ -61,7 +69,7 @@ def acc_conf_matrix(model, val_data=None, X=None, y=None, class_names_list = Non
             labels = np.concatenate([labels, np.argmax(y, axis=-1)])
 
     else:
-        for x, y in val_data:
+        for x, y in val_data: # When data is validation portion from image_dataset_from_directory
             predictions = np.concatenate([predictions, model.predict(x, verbose = False).argmax(axis=1)])
             labels = np.concatenate([labels, np.argmax(y.numpy(), axis=-1)])
     cm = confusion_matrix(labels=labels, predictions=predictions).numpy()
@@ -82,8 +90,8 @@ def read_gray_images_to_rgb(path, train_test = True, weights = False):
     Read Grayscale images from a directory and convert them to RGB
     Input: 
     path - str, the path to the images
-    train_test - bool, Default True. Controls the spliting of the data, if False - no split
-    weights - bool, Default False. Controls the calculation and return of the weights, if False - no weight are calculated
+    train_test - bool, Default True. Controls the splitting of the data, if False - no split
+    weights - bool, Default False. Controls the calculation and return of the weights, if False - no weights are calculated
     Return: X_train, X_val, y_train, y_val - four arrays ready for TensorFlow models (if train_test = True) or X_test, y_test - two arrays ready for predicting
     '''
     X = []
@@ -129,17 +137,3 @@ def read_gray_images_to_rgb(path, train_test = True, weights = False):
     
     
     
-def ald_augmentation(X_train, y_train):
-    # Make a copy of the training set and augment it
-    X_aug = []
-    for image in X_train:
-        image = transform(image=image)['image']
-        image = cv2.resize(image, (image_size, image_size))
-        X_aug.append(image)
-    # Add augmented data to training set
-    X_train = X_train + X_aug
-    y_train = y_train + y_train
-    # Prepare data for Tensorflow model
-    X_train = np.array(X_train, dtype='float32')
-    y_train = to_categorical(y_train, num_classes=4, dtype='float32')
-    return X_train, y_train
