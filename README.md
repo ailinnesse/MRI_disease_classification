@@ -83,6 +83,8 @@ For Alzheimer's disease the accuracy of the model staied about the same with and
 For Brain tumor the accuracy increaced from 75% to 78%.
 
 ### Models for application
+With dest models found for each disease I moved to construction the app for classifing single image
+My app architecture:
 ![app_architecture](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/Streamlit_app_architecture.jpg) 
 
 Disease - no disease 
@@ -97,12 +99,15 @@ Augmentation
 The augmentation that worked best in the Augmentation notebook for both Alzheimer's and Brain tumor data gave only 77% accuracy
 
 
+
+[My Streamlit app](https://www.kaggle.com/datasets/tourist55/alzheimers-dataset-4-class-of-images)
+
 ---
 ## Conclusions
 
 
 ---
-## Further Study
+## Recomendations
 
 
 ---
