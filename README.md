@@ -73,7 +73,10 @@ I have tried tree different pretrained models EfficientNetV2S my best pretrained
 ![bt_effnet](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/Brain_tumor_EfficientNetV2S.jpg) 
 
 ### Augmentation
+To combat overfitting of my models I used Augmentation.
+I used Albumentations
 
+![Albumentations](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/augmentation_pipeline_visualized.jpg) 
 
 
 

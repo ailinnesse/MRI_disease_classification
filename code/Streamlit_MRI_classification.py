@@ -5,8 +5,6 @@ import numpy as np
 import gdown
 
 
-# 
-
 def load_model_from_google_drive(link_to_file, model_name):
     '''
     inspired by https://stackoverflow.com/questions/38511444/python-download-files-from-google-drive-using-url
