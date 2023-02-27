@@ -78,7 +78,9 @@ I used Albumentations
 
 ![Albumentations](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/augmentation_pipeline_visualized.jpg) 
 
-
+For both Alzheimer's and Brain tumore the pest performing augmentations were HorizontalFlip, GaussNoise and Rotate (with limit 10)
+For Alzheimer's disease the accuracy of the model staied about the same with and without augmentation.
+For Brain tumor the accuracy increaced from 75% to 78%.
 
 ### Models for application
 ![app_architecture](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/Streamlit_app_architecture.jpg) 
