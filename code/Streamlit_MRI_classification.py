@@ -23,7 +23,7 @@ def load_model_from_google_drive(link_to_file, model_name):
     return model
 
 # Model predicting Disease or no Disease
-model_d_nod = load_model_from_google_drive(link_to_file = 'https://drive.google.com/uc?id=1zA6ONHPEr3u1l-z-ig027mNFw-hO2IiO', model_name = 'disease_no_disease.hdf5')    
+model_d_nod = load_model_from_google_drive(link_to_file = 'https://drive.google.com/uc?id=1YmZyLpmM6FKjOgViibGTTHb1Jgz3spli', model_name = 'disease_no_disease_aug.hdf5')    
 # Model predicting Ailzheimer's or Brain Tumor
 model_al_bt = load_model_from_google_drive(link_to_file = 'https://drive.google.com/uc?id=1nEG_DJ3JALKz1Ylv40z_b22eEpatjM9K', model_name = 'al_bt.hdf5') 
 # Predict Severity of alzheimer's disease
@@ -31,10 +31,12 @@ model_al = load_model_from_google_drive(link_to_file = 'https://drive.google.com
 # Predict Brain Tumor Type
 model_bt = load_model_from_google_drive(link_to_file = 'https://drive.google.com/uc?id=1GE1y3dyLTrnUHrPWdjK117AyF0u-YBdJ', model_name = 'model_bt_aug.hdf5')
 
+# set image size
 image_size = 240
 st.title('Do you have Alzheimer\'s disease or Brain tumor?')
-st.subheader('Upload the brain MRI image and see if it has Alzheimer\'s disease and it\'s severity or Brain tumor and it\'s kind or no disease')
+st.subheader('Please upload a brain MRI image to determine whether it indicates the presence of Alzheimer\'s disease and its severity, a brain tumor and its type, or if there is no evidence of disease.')
 your_image = st.file_uploader(label='Upload your image here', type=["png", "jpg", "jpeg"])
+# Prepare image for TensorFlow models
 if your_image is not None:
     test_img = keras.utils.load_img(your_image, target_size=(image_size, image_size), color_mode='grayscale') # Read grayscale image and set size
     test_img = expand_dims(test_img, -1) # Change from (image_size, image_size) to (image_size, image_size, 1)
@@ -43,18 +45,27 @@ if your_image is not None:
     test_img = expand_dims(test_img, 0) # Change to (1, image_size, image_size, 3) for TensorFlow model 
 if st.button('Submit'):
     st.image(your_image, width=300)
-    pred_dis = (model_d_nod.predict(test_img, verbose = False) > 0.5).astype("int32")
+    # Predict Disease (1) or No Disease (0)
+    pred_dis_proba = model_d_nod.predict(test_img, verbose = False)
+    pred_dis = ((pred_dis_proba) > 0.5).astype("int32") 
     if pred_dis[0][0] == 0:
-         st.write('You have: no disease')
+        pred_dis_proba_print = round(((1 - pred_dis_proba[0][0]) * 100), 2) 
+        st.write(f'The MRI image has an {pred_dis_proba_print}% probability of indicating the absence of a disease')
     else:
+        # Predict Alzheimer's (0) or Brain tumor(1)
         pred_al_bt = (model_al_bt.predict(test_img, verbose = False) > 0.5).astype("int32")
         if pred_al_bt[0][0] == 0:
-            pred_al = model_al.predict(test_img, verbose = False).argmax(axis=1)[0]
+            # Predict severity of the Alzheimer's
+            pred_al_proba = model_al.predict(test_img, verbose = False)
+            pred_al = pred_al_proba.argmax(axis=1)[0]
             al_list = ['Mild', 'Moderate', 'Very Mild']
-            st.write('You have:', al_list[pred_al], 'Alzheimer\'s')
-        
+            pred_al_proba_print = round(((pred_dis_proba[0][0]) * 100), 2)
+            st.write(f'The MRI image has an {pred_al_proba_print}% probability of indicating the presence of a {al_list[pred_al]} Alzheimer\'s')
         else:
-            pred_bt = model_bt.predict(test_img, verbose = False).argmax(axis=1)[0]
+            # Predict type of brain tumor
+            pred_bt_proba = model_bt.predict(test_img, verbose = False)
+            pred_bt = pred_bt_proba.argmax(axis=1)[0]
             bt_list = ['Glioma', 'Meningioma', 'Pituitary']
-            st.write('You have:', bt_list[pred_bt], 'tumor')
+            pred_bt_proba_print = round(pred_bt_proba[0][pred_bt] * 100, 2) 
+            st.write(f'The MRI image has an {pred_bt_proba_print}% probability of indicating the presence of a {bt_list[pred_bt]} tumor')
 
