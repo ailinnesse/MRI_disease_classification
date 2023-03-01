@@ -107,8 +107,7 @@ The application developed in this project was utilized to predict the disease cl
 
 ---
 ## Conclusions
-I have developed an [application](https://ailinnesse-mri-disease--codestreamlit-mri-classification-om06bb.streamlit.app/) that can classify individual brain MRI images and significantly improved on the baseline accuracy of 37%. The application can be a valuable initial tool for medical professionals to analyze MRI images, particularly in the case of meningioma tumors, which are often miscassified by medical professionals.
-
+I created an [application](https://ailinnesse-mri-disease--codestreamlit-mri-classification-om06bb.streamlit.app/) that can classify single brain MRI images and greatly surpassed the baseline accuracy of 37%. This application could serve as a useful initial aid for medical professionals in analyzing MRI images, especially in identifying meningioma tumors, which are frequently misclassified by medical professionals.
 ---
 ## Recomendations
 
