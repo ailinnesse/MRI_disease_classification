@@ -103,7 +103,7 @@ Based on the results of the trained models, I selected the best performing model
 [My Streamlit app](https://ailinnesse-mri-disease--codestreamlit-mri-classification-om06bb.streamlit.app/)
 
 The application developed in this project was utilized to predict the disease classification of MRI scan images in the test set. The evaluation of the application resulted in an accuracy score of 70%.
-![app_cm](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/final_app_cm.jpg) 
+![app_cm](https://github.com/ailinnesse/MRI_disease_classification/blob/main/images/final_app_cm.jpeg) 
 
 ---
 ## Conclusions
