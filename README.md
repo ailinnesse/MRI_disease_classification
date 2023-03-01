@@ -71,7 +71,7 @@ In the case of brain tumor classification, the best CNN model achieved a trainin
 ### Augmentation
 To address the issue of overfitting in the trained models, I implemented augmentation techniques using the Albumentations library. Some examples of the augmentation techniques used include RandomScale, RandomBrightnessContrast, HorizontalFlip, GaussNoise, and Rotate, with a limit of 10 with different probabilities.
 
-By applying these techniques to the training dataset during the model fitting process, the models were better equipped to generalize and perform well on new, unseen data.
+By applying these techniques to the training dataset, the models were better equipped to generalize and perform well on new, unseen data.
 
 Example of the Albumentations augmentations: 
 
