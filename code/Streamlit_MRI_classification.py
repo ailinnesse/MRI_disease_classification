@@ -2,43 +2,67 @@ import streamlit as st
 from tensorflow import keras, image
 from tensorflow import expand_dims
 import numpy as np
-import gdown
+import requests
+
+def download_file_from_google_drive(file_id, destination):
+    URL = "https://docs.google.com/uc?export=download"
+
+    session = requests.Session()
+
+    response = session.get(URL, params={'id': file_id}, stream=True)
+    token = get_confirm_token(response)
+
+    if token:
+        params = {'id': file_id, 'confirm': token}
+        response = session.get(URL, params=params, stream=True)
+
+    save_response_content(response, destination)
+
+def get_confirm_token(response):
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            return value
+
+    return None
+
+def save_response_content(response, destination):
+    CHUNK_SIZE = 32768  # You can adjust this
+
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk:
+                f.write(chunk)
 
 @st.cache_resource()
-def load_model_from_google_drive(link_to_file, model_name):
-    '''
-    Downloads and loads a TensorFlow model from Google Drive.
-    Input: 
-    - link_to_file (str): Direct download link to the model file on Google Drive.
-    - model_name (str): The name to save the downloaded model file as.
-    Output: 
-    - Returns the loaded TensorFlow model.
-    '''
-    url = link_to_file
-    output = model_name
-    # Download the model from Google Drive
-    gdown.download(url, output, quiet=False)
+def load_model_from_google_drive(file_id, model_name):
+    # Download the model
+    download_file_from_google_drive(file_id, model_name)
     # Load the model
-    model = keras.models.load_model(model_name)   
+    model = keras.models.load_model(model_name)
     return model
 
-# Load models
+# Model predicting Disease or no Disease
 model_d_nod = load_model_from_google_drive(
-    link_to_file='https://drive.google.com/uc?id=1IqWXMwVXZqIA1uAdMc1jTKQVpNlForUA', 
+    file_id='1YmZyLpmM6FKjOgViibGTTHb1Jgz3spli', 
     model_name='disease_no_disease_aug.hdf5'
 )
+# Model predicting Alzheimer's or Brain Tumor
 model_al_bt = load_model_from_google_drive(
-    link_to_file='https://drive.google.com/uc?id=1W9tH6OEfiWa3_1_DKmHfnYsic2Nem3Uw', 
+    file_id='1nEG_DJ3JALKz1Ylv40z_b22eEpatjM9K', 
     model_name='al_bt.hdf5'
 )
+# Predict Severity of Alzheimer's disease
 model_al = load_model_from_google_drive(
-    link_to_file='https://drive.google.com/uc?id=1g8dimIN0zT_76U_WuNkmCm12QKz0g91T', 
+    file_id='12n6XMrG1LN26x8R_HaHnm-vvAKrATm4b', 
     model_name='model_al_aug.hdf5'
 )
+# Predict Brain Tumor Type
 model_bt = load_model_from_google_drive(
-    link_to_file='https://drive.google.com/uc?id=1pqFz9IZ7FXV_P1dErQQtrX1CMnZYjF66', 
+    file_id='1GE1y3dyLTrnUHrPWdjK117AyF0u-YBdJ', 
     model_name='model_bt_aug.hdf5'
 )
+
+
 
 # Set image size
 image_size = 240
