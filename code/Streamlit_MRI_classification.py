@@ -24,19 +24,19 @@ def load_model_from_google_drive(link_to_file, model_name):
 
 # Load models
 model_d_nod = load_model_from_google_drive(
-    link_to_file='https://drive.google.com/uc?id=1YmZyLpmM6FKjOgViibGTTHb1Jgz3spli', 
+    link_to_file='https://drive.google.com/uc?id=1IqWXMwVXZqIA1uAdMc1jTKQVpNlForUA', 
     model_name='disease_no_disease_aug.hdf5'
 )
 model_al_bt = load_model_from_google_drive(
-    link_to_file='https://drive.google.com/uc?id=1nEG_DJ3JALKz1Ylv40z_b22eEpatjM9K', 
+    link_to_file='https://drive.google.com/uc?id=1W9tH6OEfiWa3_1_DKmHfnYsic2Nem3Uw', 
     model_name='al_bt.hdf5'
 )
 model_al = load_model_from_google_drive(
-    link_to_file='https://drive.google.com/uc?id=12n6XMrG1LN26x8R_HaHnm-vvAKrATm4b', 
+    link_to_file='https://drive.google.com/uc?id=1g8dimIN0zT_76U_WuNkmCm12QKz0g91T', 
     model_name='model_al_aug.hdf5'
 )
 model_bt = load_model_from_google_drive(
-    link_to_file='https://drive.google.com/uc?id=1GE1y3dyLTrnUHrPWdjK117AyF0u-YBdJ', 
+    link_to_file='https://drive.google.com/uc?id=1pqFz9IZ7FXV_P1dErQQtrX1CMnZYjF66', 
     model_name='model_bt_aug.hdf5'
 )
 
