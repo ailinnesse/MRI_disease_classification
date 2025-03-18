@@ -5,4 +5,4 @@ numpy
 datetime 
 requests
 pdfkit 
-sudo apt-get install wkhtmltopdf
+wkhtmltopdf
