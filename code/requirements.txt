@@ -5,4 +5,4 @@ numpy
 datetime 
 requests
  
-reportlab
+pdf_html
