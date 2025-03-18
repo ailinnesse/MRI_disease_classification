@@ -6,3 +6,4 @@ pdfkit
 wkhtmltopdf
 datetime 
 requests
+weasyprint
