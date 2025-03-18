@@ -93,6 +93,14 @@ async def html_to_pdf(html_content, output_path):
     await page.pdf({'path': output_path, 'format': 'A4'})
     await browser.close()
 
+def run_asyncio_task(task):
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+    loop.run_until_complete(task)
+
 # Streamlit app
 st.title("GC Forecast App")
 
@@ -134,7 +142,12 @@ if st.button("Generate and Download"):
                 }}
                 .table {{
                     max-width: 100%;
-: top;
+                    margin-bottom: 1rem;
+                    background-color: transparent;
+                }}
+                .table th, .table td {{
+                    padding: 0.75rem;
+                    vertical-align: top;
                     border-top: 1px solid #dee2e6;
                 }}
                 .table thead th {{
@@ -168,7 +181,7 @@ if st.button("Generate and Download"):
         </html>
         """
         pdf_file = f"{project_display_name}_gc_forecast.pdf"
-        asyncio.get_event_loop().run_until_complete(html_to_pdf(html_content, pdf_file))
+        run_asyncio_task(html_to_pdf(html_content, pdf_file))
         st.success(f"PDF file {pdf_file} generated successfully!")
         with open(pdf_file, 'rb') as file:
             st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
