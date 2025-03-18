@@ -4,5 +4,5 @@ gdown
 numpy 
 datetime 
 requests
-weasyprint
-libpango-1.0-0
+asyncio
+playwright
