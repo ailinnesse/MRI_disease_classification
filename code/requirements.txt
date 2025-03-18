@@ -5,3 +5,4 @@ numpy
 pdfkit
 wkhtmltopdf
 datetime 
+requests
