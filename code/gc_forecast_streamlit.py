@@ -3,10 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 import requests
-import asyncio
-from playwright.async_api import async_playwright
-
-playwright install 
+from xhtml2pdf import pisa
 
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
@@ -88,21 +85,10 @@ for month in months:
         ), axis=1
     )
 
-async def html_to_pdf(html_content, output_path):
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page()
-        await page.set_content(html_content)
-        await page.pdf(path=output_path, format='A1', landscape=True)
-        await browser.close()
-
-def run_asyncio_task(task):
-    try:
-        loop = asyncio.get_event_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-    loop.run_until_complete(task)
+def convert_html_to_pdf(html_string, pdf_path):
+    with open(pdf_path, "wb") as pdf_file:
+        pisa_status = pisa.CreatePDF(html_string, dest=pdf_file)
+    return not pisa_status.err
 
 # Streamlit app
 st.title("GC Forecast App")
@@ -129,6 +115,10 @@ if st.button("Generate and Download"):
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>GC Forecast</title>
             <style>
+                @page {{
+                    size: A2 landscape;
+                    margin: 20mm;
+                }}
                 body {{
                     font-family: Arial, sans-serif;
                     margin: 20px;
@@ -184,7 +174,9 @@ if st.button("Generate and Download"):
         </html>
         """
         pdf_file = f"{project_display_name}_gc_forecast.pdf"
-        run_asyncio_task(html_to_pdf(html_content, pdf_file))
-        st.success(f"PDF file {pdf_file} generated successfully!")
-        with open(pdf_file, 'rb') as file:
-            st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
+        if convert_html_to_pdf(html_content, pdf_file):
+            st.success(f"PDF file {pdf_file} generated successfully!")
+            with open(pdf_file, 'rb') as file:
+                st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
+        else:
+            st.error("PDF generation failed.")
