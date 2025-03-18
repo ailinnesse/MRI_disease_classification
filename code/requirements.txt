@@ -4,5 +4,4 @@ gdown
 numpy 
 datetime 
 requests
-asyncio
-playwright
+xhtml2pdf 
