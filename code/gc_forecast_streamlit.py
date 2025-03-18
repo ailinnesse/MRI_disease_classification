@@ -4,6 +4,15 @@ from datetime import datetime, timedelta
 import numpy as np
 import requests
 from weasyprint import HTML
+import subprocess
+
+# Function to install dependencies
+def install_dependencies():
+    subprocess.run(['apt-get', 'update'])
+    subprocess.run(['apt-get', 'install', '-y', 'libpango-1.0-0', 'libpangocairo-1.0-0', 'libgobject-2.0-0', 'libglib2.0-0', 'libcairo2'])
+
+# Install dependencies
+install_dependencies()
 
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
@@ -132,7 +141,7 @@ if st.button("Generate and Download"):
                     margin-bottom: 1rem;
                     background-color: transparent;
                 }}
-                .table th, .table td {{
+               table th, .table td {{
                     padding: 0.75rem;
                     vertical-align: top;
                     border-top: 1px solid #dee2e6;
