@@ -3,7 +3,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 import requests
-from weasyprint import HTML
+import asyncio
+from playwright.async_api import async_playwright
 
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
@@ -85,8 +86,21 @@ for month in months:
         ), axis=1
     )
 
-def html_to_pdf(html_content, output_path):
-    HTML(string=html_content).write_pdf(output_path)
+async def html_to_pdf(html_content, output_path):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        await page.set_content(html_content)
+        await page.pdf(path=output_path, format='A1', landscape=True)
+        await browser.close()
+
+def run_asyncio_task(task):
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+    loop.run_until_complete(task)
 
 # Streamlit app
 st.title("GC Forecast App")
@@ -113,10 +127,6 @@ if st.button("Generate and Download"):
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>GC Forecast</title>
             <style>
-                @page {{
-                    size: A1 landscape;
-                    margin: 20mm;
-                }}
                 body {{
                     font-family: Arial, sans-serif;
                     margin: 20px;
@@ -172,7 +182,7 @@ if st.button("Generate and Download"):
         </html>
         """
         pdf_file = f"{project_display_name}_gc_forecast.pdf"
-        html_to_pdf(html_content, pdf_file)
+        run_asyncio_task(html_to_pdf(html_content, pdf_file))
         st.success(f"PDF file {pdf_file} generated successfully!")
         with open(pdf_file, 'rb') as file:
             st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
