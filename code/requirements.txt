@@ -2,3 +2,6 @@ tensorflow
 h5py
 gdown
 numpy 
+pdfkit
+wkhtmltopdf
+datetime 
