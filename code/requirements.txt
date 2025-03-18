@@ -6,4 +6,4 @@ datetime
 requests
  
 
-puppeteer
+reportlab
