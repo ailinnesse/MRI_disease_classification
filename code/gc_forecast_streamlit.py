@@ -3,6 +3,25 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 import pdfkit
+import requests
+
+
+# Function to download CSV files from GitHub
+def download_csv_from_github(url, file_name):
+    response = requests.get(url)
+    with open(file_name, 'wb') as file:
+        file.write(response.content)
+
+# URLs of the CSV files in your GitHub repository
+gc_url = 'https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/gc_forecast.csv'
+gc_summary_url = 'https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/gc_smmary.csv'
+pay_periods_url = 'https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/pay_periods.csv'
+
+# Download the CSV files
+download_csv_from_github(gc_url, 'gc_forecast.csv')
+download_csv_from_github(gc_summary_url, 'gc_summary.csv')
+download_csv_from_github(pay_periods_url, 'pay_periods.csv')
+
 
 # Load data
 gc = pd.read_csv('gc_forecast.csv')
