@@ -3,10 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 import requests
-from reportlab.lib.pagesizes import A1, landscape
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+import subprocess
 
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
@@ -88,46 +85,8 @@ for month in months:
         ), axis=1
     )
 
-def convert_html_to_pdf(html_string, pdf_path):
-    doc = SimpleDocTemplate(pdf_path, pagesize=landscape(A1))
-    elements = []
-
-    styles = getSampleStyleSheet()
-    elements.append(Paragraph("GC Forecast", styles['Title']))
-    elements.append(Paragraph("Summary", styles['Heading2']))
-
-    # Convert HTML tables to ReportLab tables
-    summary_table = pd.read_html(html_string)[0]
-    summary_data = [summary_table.columns.values.tolist()] + summary_table.values.tolist()
-    summary_table = Table(summary_data)
-    summary_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-    ]))
-    elements.append(summary_table)
-
-    elements.append(Paragraph("Details", styles['Heading2']))
-
-    details_table = pd.read_html(html_string)[1]
-    details_data = [details_table.columns.values.tolist()] + details_table.values.tolist()
-    details_table = Table(details_data)
-    details_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-    ]))
-    elements.append(details_table)
-
-    doc.build(elements)
+def convert_html_to_pdf(html_content, pdf_path):
+    subprocess.run(['node', 'generate_pdf.js', html_content, pdf_path], check=True)
 
 # Streamlit app
 st.title("GC Forecast App")
