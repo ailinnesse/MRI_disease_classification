@@ -12,16 +12,15 @@ def download_csv_from_github(url, file_name):
     with open(file_name, 'wb') as file:
         file.write(response.content)
 
-# URLs of the CSV files in your GitHub repository
-gc_url = 'https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/gc_forecast.csv'
-gc_summary_url = 'https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/gc_smmary.csv'
-pay_periods_url = 'https://github.com/ailinnesse/MRI_disease_classification/blob/main/code/pay_periods.csv'
+# URLs of the raw CSV files in your GitHub repository
+gc_url = 'https://raw.githubusercontent.com/ailinnesse/MRI_disease_classification/main/code/gc_forecast.csv'
+gc_summary_url = 'https://raw.githubusercontent.com/ailinnesse/MRI_disease_classification/main/code/gc_summary.csv'
+pay_periods_url = 'https://raw.githubusercontent.com/ailinnesse/MRI_disease_classification/main/code/pay_periods.csv'
 
 # Download the CSV files
 download_csv_from_github(gc_url, 'gc_forecast.csv')
 download_csv_from_github(gc_summary_url, 'gc_summary.csv')
 download_csv_from_github(pay_periods_url, 'pay_periods.csv')
-
 
 # Load data with error handling for bad lines
 gc = pd.read_csv('gc_forecast.csv', on_bad_lines='skip')
