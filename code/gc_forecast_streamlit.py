@@ -6,6 +6,8 @@ import requests
 import asyncio
 from playwright.async_api import async_playwright
 
+playwright install 
+
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
     response = requests.get(url)
