@@ -5,7 +5,6 @@ import numpy as np
 import pdfkit
 import requests
 
-
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
     response = requests.get(url)
@@ -136,7 +135,6 @@ if st.button("Download PDF"):
                 max-width: 100%;
                 margin-bottom: 1rem;
                 background-color: transparent;
-                border-collapse: collapse;
             }}
             .table th, .table td {{
                 padding: 0.75rem;
