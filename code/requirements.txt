@@ -6,3 +6,4 @@ datetime
 requests
  
 pdf_html
+reportlab
