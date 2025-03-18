@@ -87,7 +87,7 @@ for month in months:
     )
 
 async def html_to_pdf(html_content, output_path):
-    browser = await launch(handleSIGINT=False, handleSIGTERM=False, handleSIGHUP=False, args=['--no-sandbox'])
+    browser = await launch(headless=True, args=['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-software-rasterizer', '--disable-setuid-sandbox'])
     page = await browser.newPage()
     await page.setContent(html_content)
     await page.pdf({'path': output_path, 'format': 'A4'})
