@@ -4,4 +4,5 @@ gdown
 numpy 
 datetime 
 requests
-xhtml2pdf 
+pdfkit 
+sudo apt-get install wkhtmltopdf
