@@ -110,82 +110,84 @@ st.title("GC Forecast App")
 
 project_display_name = st.text_input("Project Display Name")
 
-if st.button("Generate CSV"):
-    csv_file = f"{project_display_name}_output.csv"
-    gc.to_csv(csv_file, index=False)
-    st.success(f"CSV file {csv_file} generated successfully!")
+download_option = st.selectbox("Select download option", ["CSV", "PDF"])
 
-if st.button("Download CSV"):
-    csv_file = f"{project_display_name}_output.csv"
-    st.download_button(label="Download CSV", data=open(csv_file, 'rb').read(), file_name=csv_file, mime='text/csv')
-
-if st.button("Download PDF"):
-    html_content_gc = gc.to_html(classes='table table-striped table-bordered', index=False)
-    html_content_gc_summary = gc_summary.to_html(classes='table table-striped table-bordered', index=False)
-    html_content = f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>GC Forecast</title>
-        <style>
-            body {{
-                font-family: Arial, sans-serif;
-                margin: 20px;
-            }}
-            h1 {{
-                text-align: left;
-                font-size: 24px;
-                margin-bottom: 20px;
-            }}
-            h2 {{
-                text-align: left;
-                font-size: 20px;
-                margin-top: 20px;
-            }}
-            .table {{
-                max-width: 100%;
-                margin-bottom: 1rem;
-                background-color: transparent;
-            }}
-            .table th, .table td {{
-                padding: 0.75rem;
-                vertical-align: top;
-                border-top: 1px solid #dee2e6;
-            }}
-            .table thead th {{
-                vertical-align: bottom;
-                border-bottom: 2px solid #dee2e6;
-                font-weight: bold;
-            }}
-            .table-bordered {{
-                border: 1px solid #dee2e6;
-            }}
-            .table-bordered th, .table-bordered td {{
-                border: 1px solid #dee2e6;
-            }}
-            .table-striped tbody tr:nth-of-type(odd) {{
-                background-color: rgba(0, 0, 0, 0.05);
-            }}
-            .summary-table {{
-                margin-left: 0;
-            }}
-        </style>
-    </head>
-    <body>
-        <h1>GC Forecast</h1>
-        <h2>Summary</h2>
-        <div class="summary-table">
-            {html_content_gc_summary}
-        </div>
-        <h2>Details</h2>
-        {html_content_gc}
-    </body>
-    </html>
-    """
-    with open('df_gc.html', 'w') as f:
-        f.write(html_content)
-    pdf_file = f"{project_display_name}_gc_forecast.pdf"
-    save_df_to_pdf('df_gc.html', pdf_file)
-    st.download_button(label="Download PDF", data=open(pdf_file, 'rb').read(), file_name=pdf_file, mime='application/pdf')
+if st.button("Generate and Download"):
+    if download_option == "CSV":
+        csv_file = f"{project_display_name}_output.csv"
+        gc.to_csv(csv_file, index=False)
+        st.success(f"CSV file {csv_file} generated successfully!")
+        with open(csv_file, 'rb') as file:
+            st.download_button(label="Download CSV", data=file.read(), file_name=csv_file, mime='text/csv')
+    elif download_option == "PDF":
+        html_content_gc = gc.to_html(classes='table table-striped table-bordered', index=False)
+        html_content_gc_summary = gc_summary.to_html(classes='table table-striped table-bordered', index=False)
+        html_content = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>GC Forecast</title>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                }}
+                h1 {{
+                    text-align: left;
+                    font-size: 24px;
+                    margin-bottom: 20px;
+                }}
+                h2 {{
+                    text-align: left;
+                    font-size: 20px;
+                    margin-top: 20px;
+                }}
+                .table {{
+                    max-width: 100%;
+                    margin-bottom: 1rem;
+                    background-color: transparent;
+                }}
+                .table th, .table td {{
+                    padding: 0.75rem;
+                    vertical-align: top;
+                    border-top: 1px solid #dee2e6;
+                }}
+                .table thead th {{
+                    vertical-align: bottom;
+                    border-bottom: 2px solid #dee2e6;
+                    font-weight: bold;
+                }}
+                .table-bordered {{
+                    border: 1px solid #dee2e6;
+                }}
+                .table-bordered th, .table-bordered td {{
+                    border: 1px solid #dee2e6;
+                }}
+                .table-striped tbody tr:nth-of-type(odd) {{
+                    background-color: rgba(0, 0, 0, 0.05);
+                }}
+                .summary-table {{
+                    margin-left: 0;
+                }}
+            </style>
+        </head>
+        <body>
+            <h1>GC Forecast</h1>
+            <h2>Summary</h2>
+            <div class="summary-table">
+                {html_content_gc_summary}
+            </div>
+            <h2>Details</h2>
+            {html_content_gc}
+        </body>
+        </html>
+        """
+        with open('df_gc.html', 'w') as f:
+            f.write(html_content)
+        pdf_file = f"{project_display_name}_gc_forecast.pdf"
+        save_df_to_pdf('df_gc.html', pdf_file)
+        st.success(f"PDF file {pdf_file} generated successfully!")
+        with open(pdf_file, 'rb') as file:
+            st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
