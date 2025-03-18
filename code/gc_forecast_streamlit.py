@@ -115,6 +115,10 @@ if st.button("Generate and Download"):
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>GC Forecast</title>
             <style>
+                @page {{
+                    size: A2 landscape;
+                    margin: 20mm;
+                }}
                 body {{
                     font-family: Arial, sans-serif;
                     margin: 20px;
