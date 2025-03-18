@@ -23,10 +23,10 @@ download_csv_from_github(gc_summary_url, 'gc_summary.csv')
 download_csv_from_github(pay_periods_url, 'pay_periods.csv')
 
 
-# Load data
-gc = pd.read_csv('gc_forecast.csv')
-gc_summary = pd.read_csv('gc_summary.csv')
-pay_periods = pd.read_csv('pay_periods.csv')
+# Load data with error handling for bad lines
+gc = pd.read_csv('gc_forecast.csv', on_bad_lines='skip')
+gc_summary = pd.read_csv('gc_summary.csv', on_bad_lines='skip')
+pay_periods = pd.read_csv('pay_periods.csv', on_bad_lines='skip')
 
 # Change StartDate and EndDate column to DateTime to be able to compare to the Months for calculations
 gc['StartDate'] = pd.to_datetime(gc['StartDate'])
