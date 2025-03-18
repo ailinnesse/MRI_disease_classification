@@ -116,7 +116,7 @@ if st.button("Generate and Download"):
             <title>GC Forecast</title>
             <style>
                 @page {{
-                    size: A1 landscape;
+                    size: A2 landscape;
                     margin: 20mm;
                 }}
                 body {{
@@ -128,7 +128,7 @@ if st.button("Generate and Download"):
                     font-size: 24px;
                     margin-bottom: 20px;
                 }}
-                {{
+                h2 {{
                     text-align: left;
                     font-size: 20px;
                     margin-top: 20px;
