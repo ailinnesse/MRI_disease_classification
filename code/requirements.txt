@@ -4,4 +4,4 @@ gdown
 numpy 
 datetime 
 requests
-pyppeteer
+xhtml2pdf
