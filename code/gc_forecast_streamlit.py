@@ -4,6 +4,15 @@ from datetime import datetime, timedelta
 import numpy as np
 import pdfkit
 import requests
+import subprocess
+
+# Function to install wkhtmltopdf
+def install_wkhtmltopdf():
+    subprocess.run(['apt-get', 'update'])
+    subprocess.run(['apt-get', 'install', '-y', 'wkhtmltopdf'])
+
+# Install wkhtmltopdf
+install_wkhtmltopdf()
 
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
@@ -86,7 +95,7 @@ for month in months:
     )
 
 def save_df_to_pdf(html_file, file_name):
-    path_to_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    path_to_wkhtmltopdf = '/usr/bin/wkhtmltopdf'
     config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
     options = {
         'page-size': 'A2',
@@ -101,10 +110,14 @@ st.title("GC Forecast App")
 
 project_display_name = st.text_input("Project Display Name")
 
-if st.button("Download CSV"):
+if st.button("Generate CSV"):
     csv_file = f"{project_display_name}_output.csv"
     gc.to_csv(csv_file, index=False)
-    st.download_button(label="Download CSV", data=open(csv_file, 'rb'), file_name=csv_file, mime='text/csv')
+    st.success(f"CSV file {csv_file} generated successfully!")
+
+if st.button("Download CSV"):
+    csv_file = f"{project_display_name}_output.csv"
+    st.download_button(label="Download CSV", data=open(csv_file, 'rb').read(), file_name=csv_file, mime='text/csv')
 
 if st.button("Download PDF"):
     html_content_gc = gc.to_html(classes='table table-striped table-bordered', index=False)
@@ -175,4 +188,4 @@ if st.button("Download PDF"):
         f.write(html_content)
     pdf_file = f"{project_display_name}_gc_forecast.pdf"
     save_df_to_pdf('df_gc.html', pdf_file)
-    st.download_button(label="Download PDF", data=open(pdf_file, 'rb'), file_name=pdf_file, mime='application/pdf')
+    st.download_button(label="Download PDF", data=open(pdf_file, 'rb').read(), file_name=pdf_file, mime='application/pdf')
