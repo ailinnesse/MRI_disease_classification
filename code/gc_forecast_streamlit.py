@@ -105,7 +105,7 @@ for month in months:
     )
 
 def save_df_to_pdf(html_file, file_name):
-    path_to_wkhtmltopdf = '/usr/local/bin/wkhtmltopdf'
+    path_to_wkhtmltopdf = '/usr/bin/wkhtmltopdf'
     config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
     options = {
         'page-size': 'A2',
@@ -188,4 +188,16 @@ if st.button("Generate and Download"):
             <h2>Summary</h2>
             <div class="summary-table">
                 {html_content_gc_summary}
-           
+            </div>
+            <h2>Details</h2>
+            {html_content_gc}
+        </body>
+        </html>
+        """
+        with open('df_gc.html', 'w') as f:
+            f.write(html_content)
+        pdf_file = f"{project_display_name}_gc_forecast.pdf"
+        save_df_to_pdf('df_gc.html', pdf_file)
+        st.success(f"PDF file {pdf_file} generated successfully!")
+        with open(pdf_file, 'rb') as file:
+            st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
