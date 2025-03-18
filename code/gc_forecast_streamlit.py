@@ -2,27 +2,8 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
-import pdfkit
 import requests
-import subprocess
-
-# Function to install wkhtmltopdf
-def install_wkhtmltopdf():
-    subprocess.run(['apt-get', 'update'])
-    subprocess.run(['apt-get', 'install', '-y', 'wkhtmltopdf'])
-
-# Install wkhtmltopdf
-install_wkhtmltopdf()
-
-# Verify wkhtmltopdf installation
-def verify_wkhtmltopdf():
-    result = subprocess.run(['wkhtmltopdf', '--version'], capture_output=True, text=True)
-    if result.returncode == 0:
-        st.success("wkhtmltopdf installed successfully")
-    else:
-        st.error("wkhtmltopdf installation failed")
-
-verify_wkhtmltopdf()
+from weasyprint import HTML
 
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
@@ -104,16 +85,8 @@ for month in months:
         ), axis=1
     )
 
-def save_df_to_pdf(html_file, file_name):
-    path_to_wkhtmltopdf = '/usr/bin/wkhtmltopdf'
-    config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
-    options = {
-        'page-size': 'A2',
-        'orientation': 'Landscape',
-        'zoom': 0.2,
-        'no-outline': None
-    }
-    pdfkit.from_file(html_file, file_name, configuration=config, options=options)
+def save_df_to_pdf(html_content, file_name):
+    HTML(string=html_content).write_pdf(file_name)
 
 # Streamlit app
 st.title("GC Forecast App")
@@ -194,10 +167,8 @@ if st.button("Generate and Download"):
         </body>
         </html>
         """
-        with open('df_gc.html', 'w') as f:
-            f.write(html_content)
         pdf_file = f"{project_display_name}_gc_forecast.pdf"
-        save_df_to_pdf('df_gc.html', pdf_file)
+        save_df_to_pdf(html_content, pdf_file)
         st.success(f"PDF file {pdf_file} generated successfully!")
         with open(pdf_file, 'rb') as file:
             st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
