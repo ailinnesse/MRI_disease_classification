@@ -3,16 +3,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 import requests
-from weasyprint import HTML
-import subprocess
-
-# Function to install dependencies
-def install_dependencies():
-    subprocess.run(['apt-get', 'update'])
-    subprocess.run(['apt-get', 'install', '-y', 'libpango-1.0-0', 'libpangocairo-1.0-0', 'libgobject-2.0-0', 'libglib2.0-0', 'libcairo2'])
-
-# Install dependencies
-install_dependencies()
+import asyncio
+from pyppeteer import launch
 
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
@@ -94,8 +86,12 @@ for month in months:
         ), axis=1
     )
 
-def save_df_to_pdf(html_content, file_name):
-    HTML(string=html_content).write_pdf(file_name)
+async def html_to_pdf(html_content, output_path):
+    browser = await launch()
+    page = await browser.newPage()
+    await page.setContent(html_content)
+    await page.pdf({'path': output_path, 'format': 'A4'})
+    await browser.close()
 
 # Streamlit app
 st.title("GC Forecast App")
@@ -138,12 +134,7 @@ if st.button("Generate and Download"):
                 }}
                 .table {{
                     max-width: 100%;
-                    margin-bottom: 1rem;
-                    background-color: transparent;
-                }}
-               table th, .table td {{
-                    padding: 0.75rem;
-                    vertical-align: top;
+: top;
                     border-top: 1px solid #dee2e6;
                 }}
                 .table thead th {{
@@ -177,7 +168,7 @@ if st.button("Generate and Download"):
         </html>
         """
         pdf_file = f"{project_display_name}_gc_forecast.pdf"
-        save_df_to_pdf(html_content, pdf_file)
+        asyncio.get_event_loop().run_until_complete(html_to_pdf(html_content, pdf_file))
         st.success(f"PDF file {pdf_file} generated successfully!")
         with open(pdf_file, 'rb') as file:
             st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
