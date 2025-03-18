@@ -4,4 +4,4 @@ gdown
 numpy 
 datetime 
 requests
-xhtml2pdf
+weasyprint
