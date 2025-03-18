@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 import requests
-from xhtml2pdf import pisa
+import pdfkit
 
 # Function to download CSV files from GitHub
 def download_csv_from_github(url, file_name):
@@ -85,10 +85,18 @@ for month in months:
         ), axis=1
     )
 
+# Convert HTML to PDF using pdfkit and wkhtmltopdf
 def convert_html_to_pdf(html_string, pdf_path):
-    with open(pdf_path, "wb") as pdf_file:
-        pisa_status = pisa.CreatePDF(html_string, dest=pdf_file)
-    return not pisa_status.err
+    options = {
+        'page-size': 'A2',
+        'orientation': 'landscape',
+        'margin-top': '20mm',
+        'margin-right': '20mm',
+        'margin-bottom': '20mm',
+        'margin-left': '20mm'
+    }
+    
+    pdfkit.from_string(html_string, pdf_path, options=options)
 
 # Streamlit app
 st.title("GC Forecast App")
@@ -107,6 +115,7 @@ if st.button("Generate and Download"):
     elif download_option == "PDF":
         html_content_gc = gc.to_html(classes='table table-striped table-bordered', index=False)
         html_content_gc_summary = gc_summary.to_html(classes='table table-striped table-bordered', index=False)
+        
         html_content = f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -173,10 +182,12 @@ if st.button("Generate and Download"):
         </body>
         </html>
         """
+        
         pdf_file = f"{project_display_name}_gc_forecast.pdf"
-        if convert_html_to_pdf(html_content, pdf_file):
-            st.success(f"PDF file {pdf_file} generated successfully!")
-            with open(pdf_file, 'rb') as file:
-                st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
-        else:
-            st.error("PDF generation failed.")
+        
+        convert_html_to_pdf(html_content, pdf_file)
+        
+        st.success(f"PDF file {pdf_file} generated successfully!")
+        
+        with open(pdf_file, 'rb') as file:
+            st.download_button(label="Download PDF", data=file.read(), file_name=pdf_file, mime='application/pdf')
